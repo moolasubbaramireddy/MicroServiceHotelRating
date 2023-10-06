@@ -1,6 +1,7 @@
 package com.userService.service.impl;
 
 import com.userService.entity.User;
+import com.userService.exception.ResourceNotFoundException;
 import com.userService.repository.UserRepository;
 import com.userService.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUser(String userId) {
-        return userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User is not found with :"+userId));
+        return userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User is not found with :"+userId));
     }
 
     @Override
     public User updateUser(String userId, User updateUser) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User id is not avaliable check it once your database"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User id is not avaliable check it once your database"));
         user.setName(updateUser.getName());
         user.setEmail(updateUser.getEmail());
         user.setAbout(updateUser.getAbout());
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
     if (userRepository.existsById(userId)){
         userRepository.deleteById(userId);
     }else {
-        throw new RuntimeException("User not found with ID: " + userId);
+        throw new ResourceNotFoundException("User not found with ID: " + userId);
     }
     }
 }
