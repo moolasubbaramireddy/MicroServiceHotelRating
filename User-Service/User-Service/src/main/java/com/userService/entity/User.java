@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,6 +20,8 @@ public class User {
     private String userId;
     private String name;
     private String email;
-    private String about;
+    private String feedback;
+
+    private List<Rating> ratings=new ArrayList<>();
 
 }
