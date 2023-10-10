@@ -24,7 +24,7 @@ public class RatingController {
         return ResponseEntity.ok(ratingService.getRatings());
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<List<Rating>> getRatingsUserId(@PathVariable String userId){
         return ResponseEntity.ok(ratingService.getRatingByUserId(userId));
     }
