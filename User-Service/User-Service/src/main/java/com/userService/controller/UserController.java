@@ -4,6 +4,7 @@ import com.userService.entity.User;
 import com.userService.service.UserService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +29,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(user1);
     }
 
-    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+    int retryCount=1;
     @GetMapping("/{userId}")
+ //   @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+    @Retry(name = "ratingHotelService", fallbackMethod = "ratingHotelFallback")
     public ResponseEntity<User> getSingleUser(@PathVariable String userId){
-        logger.info("Get Single user Handler: userController");
+        //logger.info("Get Single user Handler: userController");
+        logger.info("Retry Count { }"+retryCount);
+        retryCount++;
         User user = userService.getUser(userId);
         return ResponseEntity.ok(user);
     }
