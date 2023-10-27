@@ -41,7 +41,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getUsers() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+
+        for (User user : users) {
+            Rating[] ratingOfUser = restTemplate.getForObject("http://RATING-SERVICE/ratings/users/" + user.getUserId(), Rating[].class);
+            List<Rating> ratings = Arrays.asList(ratingOfUser);
+
+            List<Rating> ratingList = ratings.stream().map(rating -> {
+                Hotel hotel = hotelService.getHotel(rating.getHotelId());
+                rating.setHotel(hotel);
+                return rating;
+            }).collect(Collectors.toList());
+
+            user.setRatings(ratingList);
+        }
+
+        return users;
     }
 
     @Override
